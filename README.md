@@ -512,3 +512,196 @@ composer install
 
 Понимая эту структуру, дальше гораздо проще читать примеры и документацию Symfony.
 
+## 8. Основы разработки на Symfony
+
+В этом разделе — минимальный набор шагов, чтобы понять “как писать код” на Symfony: маршруты, контроллеры, шаблоны и первые сервисы.
+
+---
+
+### 8.1. Первый маршрут
+
+В Symfony маршрут связывает URL с методом контроллера.
+
+Есть несколько способов описывать маршруты:
+- атрибуты (PHP 8) прямо в коде контроллера
+- config/routes.yaml
+- отдельные yaml-файлы в config/routes/
+
+Чаще всего в новых проектах используют атрибуты.
+
+Пример (идея, не вставляй как есть — ниже будет полный контроллер):
+#[Route('/hello', name: 'app_hello')]
+
+Этот маршрут говорит:
+- по адресу /hello
+- вызывать метод, над которым стоит атрибут
+- имя маршрута app_hello (используется для генерации URL в шаблонах и редиректах)
+
+---
+
+### 8.2. Первый контроллер
+
+Контроллер — это обычный PHP-класс в src/Controller, который возвращает HTTP-ответ.
+
+Типичный пример контроллера:
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class HelloController extends AbstractController
+{
+    #[Route('/hello', name: 'app_hello')]
+    public function index(): Response
+    {
+        return new Response('Hello, Symfony!');
+    }
+}
+
+Смысл:
+- класс HelloController лежит в src/Controller
+- метод index вызывается, когда пользователь открывает /hello
+- возвращается объект Response с текстом
+
+---
+
+### 8.3. Ответ через шаблон Twig
+
+Чаще всего контроллер не пишет HTML руками, а рендерит шаблон.
+
+Пример контроллера с Twig:
+
+public function index(): Response
+{
+    return $this->render('hello/index.html.twig', [
+        'name' => 'Symfony',
+    ]);
+}
+
+Здесь:
+- render — метод из AbstractController
+- 'hello/index.html.twig' — путь к шаблону (templates/hello/index.html.twig)
+- массив с данными (name) будет доступен внутри шаблона
+
+---
+
+### 8.4. Первый Twig-шаблон
+
+Создай файл templates/hello/index.html.twig со следующим содержимым (пример):
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello{% endblock %}
+
+{% block body %}
+    <h1>Hello, {{ name }}!</h1>
+{% endblock %}
+
+Смысл:
+- extends 'base.html.twig' — наследуется от основного layout
+- block title / block body — заполняет секции, определённые в base.html.twig
+- {{ name }} — выводит переменную, переданную из контроллера
+
+---
+
+### 8.5. Генерация URL по имени маршрута
+
+Вместо того чтобы хардкодить ссылку /hello, лучше использовать имя маршрута.
+
+В Twig:
+<a href="{{ path('app_hello') }}">Перейти на /hello</a>
+
+В контроллере (например, для редиректа):
+return $this->redirectToRoute('app_hello');
+
+Так проще менять URL в будущем: ты меняешь путь в маршруте, а имя маршрута — нет.
+
+---
+
+### 8.6. Работа с Request и параметрами
+
+Метод контроллера может принимать объект Request и параметры маршрута.
+
+Пример маршрута с параметром:
+#[Route('/hello/{name}', name: 'app_hello_name')]
+
+Контроллер:
+
+public function index(string $name): Response
+{
+    return $this->render('hello/index.html.twig', [
+        'name' => $name,
+    ]);
+}
+
+Важно:
+- параметр {name} в маршруте автоматически передаётся аргументом в метод
+- можно также принимать Request и работать с query-параметрами, POST-данными и т.п.
+
+---
+
+### 8.7. Сервисы и внедрение зависимостей (DI)
+
+Вся полезная логика обычно выносится из контроллеров в сервисы (классы в src/Service или других каталогах).
+
+Пример сервиса:
+
+namespace App\Service;
+
+class GreetingService
+{
+    public function getGreeting(string $name): string
+    {
+        return 'Hello, ' . $name . '!';
+    }
+}
+
+Если в config/services.yaml включён автowired/автоконфиг, ты можешь просто добавить этот сервис как аргумент в контроллер:
+
+use App\Service\GreetingService;
+
+public function index(GreetingService $greetingService): Response
+{
+    $text = $greetingService->getGreeting('Symfony');
+
+    return new Response($text);
+}
+
+Symfony сам создаст экземпляр GreetingService и передаст его в метод контроллера.
+
+Идея:
+- контроллер превращается в тонкий слой
+- бизнес-логика лежит в сервисах
+- тестировать сервис намного проще
+
+---
+
+### 8.8. Основные команды для разработки
+
+Пара команд, которыми ты будешь пользоваться постоянно:
+
+Запуск локального сервера:
+symfony serve
+
+Просмотр всех маршрутов:
+php bin/console debug:router
+
+Очистка кэша:
+php bin/console cache:clear
+
+Создание контроллера (если установлен maker-bundle):
+php bin/console make:controller
+
+---
+
+### 8.9. Минимальный “путь” новичка
+
+1) Создать маршрут (атрибут #[Route(...)] в контроллере).
+2) Написать метод контроллера, который возвращает Response или рендерит Twig-шаблон.
+3) Создать шаблон в templates/ и отобразить данные.
+4) При необходимости — вынести логику в сервис и внедрить его через аргументы метода.
+5) Посмотреть маршрут через debug:router и открыть его в браузере.
+
+Овладев этими шагами, ты уже умеешь создавать простые страницы, выводить данные и организовывать структуру кода “по-взрослому”.
