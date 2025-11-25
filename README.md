@@ -1685,3 +1685,122 @@ Symfony хорошо дружит с PHPUnit:
 
 Твой репозиторий symphony-overview как раз и будет таким “правильным README по Symfony”, который можно открыть и сразу понять, что делать дальше.
 
+## 15. Полезные ссылки и что читать дальше
+
+В этом разделе — подборка официальной документации и ресурсов, с которых удобно продолжать изучение Symfony.
+
+---
+
+### 15.1. Официальная документация Symfony
+
+Главный источник правды по фреймворку:
+
+- Документация Symfony:
+  https://symfony.com/doc
+
+- Стартовая страница “Getting Started”:
+  https://symfony.com/doc/current/page_creation.html
+
+- Руководство по компонентам:
+  https://symfony.com/doc/current/components/index.html
+
+---
+
+### 15.2. Установка и Symfony CLI
+
+- Скачать и установить Symfony CLI:
+  https://symfony.com/download
+
+- Документация по настройке окружения:
+  https://symfony.com/doc/current/setup.html
+
+---
+
+### 15.3. Туториалы и видео-курсы
+
+- SymfonyCasts (бывший KnpUniversity) — официально рекомендуемые screencasts:
+  https://symfonycasts.com/
+
+---
+
+### 15.4. Twig (шаблонизатор)
+
+- Официальная документация Twig:
+  https://twig.symfony.com/doc/
+
+- Раздел про Twig в документации Symfony:
+  https://symfony.com/doc/current/templating.html
+
+---
+
+### 15.5. Doctrine ORM и работа с БД
+
+- Документация Doctrine ORM:
+  https://www.doctrine-project.org/projects/orm.html
+
+- Раздел “Doctrine и базы данных” в Symfony:
+  https://symfony.com/doc/current/doctrine.html
+
+---
+
+### 15.6. Конфигурация, DI и сервис-контейнер
+
+- Сервисы и контейнер зависимостей:
+  https://symfony.com/doc/current/service_container.html
+
+- Конфигурация приложения:
+  https://symfony.com/doc/current/configuration.html
+
+---
+
+### 15.7. Безопасность и аутентификация
+
+- Раздел “Security” в документации Symfony:
+  https://symfony.com/doc/current/security.html
+
+---
+
+### 15.8. Создание API и API Platform
+
+- Создание простого JSON/API на Symfony:
+  https://symfony.com/doc/current/controller.html#json-response
+
+- API Platform (мощный фреймворк для построения API поверх Symfony):
+  https://api-platform.com/
+
+---
+
+### 15.9. Тестирование
+
+- Тестирование в Symfony (unit, functional, integration):
+  https://symfony.com/doc/current/testing.html
+
+---
+
+### 15.10. Лучшие практики и рекомендации
+
+- Официальные “Best Practices” для Symfony:
+  https://symfony.com/doc/current/best_practices.html
+
+---
+
+### 15.11. Сообщество и помощь
+
+- Форумы и вопросы по Symfony (Stack Overflow — тег symfony):
+  https://stackoverflow.com/questions/tagged/symfony
+
+- Symfony Slack/Discord и другие каналы — список сообществ:
+  https://symfony.com/community
+
+---
+
+### 15.12. Как использовать этот репозиторий дальше
+
+Идея для финальной подводки (можно адаптировать текст под себя):
+
+> Открывай ссылки выше как “следующие шаги”:
+> - если нужен быстрый старт — смотри разделы Getting Started и SymfonyCasts,
+> - если нужна конкретная тема (Doctrine, Twig, Security) — переходи в соответствующий раздел документации,
+> - если упёрся в ошибку — загляни в официальные доки и на Stack Overflow.
+>
+> Этот README задуман как лёгкий вход в экосистему Symfony: прочитай его целиком, запусти свой первый проект, а дальше используй официальную документацию как подробный справочник.
