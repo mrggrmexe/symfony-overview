@@ -705,3 +705,123 @@ php bin/console make:controller
 5) Посмотреть маршрут через debug:router и открыть его в браузере.
 
 Овладев этими шагами, ты уже умеешь создавать простые страницы, выводить данные и организовывать структуру кода “по-взрослому”.
+
+## 9. Работа с базой данных (Doctrine ORM)
+
+Symfony обычно работает с базой данных через Doctrine ORM — это слой, который позволяет описывать таблицы в виде PHP-классов (сущностей) и писать минимум “сырого” SQL.
+
+---
+
+### 9.1. Подключение базы данных через .env
+
+В корне проекта есть файл .env. В нём задаётся строка подключения к БД:
+
+DATABASE_URL="mysql://username:password@127.0.0.1:3306/db_name?serverVersion=8.0"
+
+Примеры:
+- MySQL / MariaDB:
+  DATABASE_URL="mysql://root:password@127.0.0.1:3306/my_db?serverVersion=8.0"
+- PostgreSQL:
+  DATABASE_URL="postgresql://user:password@127.0.0.1:5432/my_db?serverVersion=15&charset=utf8"
+- SQLite:
+  DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
+
+Для локальной разработки часто достаточно SQLite или локального MySQL/PostgreSQL.
+
+---
+
+### 9.2. Создание сущности (Entity)
+
+Сущность — это PHP-класс, который описывает таблицу БД.
+
+Если установлен maker-bundle (обычно так и есть в webapp-проектах), то сущность можно сгенерировать командой:
+
+php bin/console make:entity
+
+Далее CLI предложит:
+- имя сущности (например, Article)
+- поля (title, content, createdAt и т.п.)
+- типы полей (string, text, datetime, boolean и т.д.)
+
+В итоге появится класс в src/Entity/Article.php.
+
+---
+
+### 9.3. Миграции базы данных
+
+После изменения сущностей нужно обновить схему базы данных.
+
+Шаги:
+
+1) Сгенерировать миграцию:
+php bin/console make:migration
+
+2) Применить миграцию:
+php bin/console doctrine:migrations:migrate
+
+Доктрина сравнит текущую схему БД с описанием сущностей и подготовит SQL для обновления.
+
+---
+
+### 9.4. Репозитории (Repository)
+
+Для каждой сущности Doctrine может создать репозиторий — класс для работы с БД.
+
+Если сущность создавалась через make:entity, обычно репозиторий генерируется автоматически в src/Repository/ArticleRepository.php.
+
+Через репозиторий можно:
+- находить записи: find(), findOneBy(), findAll(), findBy()
+- писать свои запросы (DQL/QueryBuilder)
+
+Пример:
+$articles = $articleRepository->findAll();
+
+---
+
+### 9.5. Простейший CRUD-поток
+
+Схематично:
+
+1) Создать сущность (make:entity Article).
+2) Создать миграцию и применить её (make:migration + doctrine:migrations:migrate).
+3) В контроллере или сервисе:
+   - создать объект сущности: $article = new Article(...);
+   - получить EntityManager: $em = $this->getDoctrine()->getManager(); (или через DI);
+   - сохранить:
+     $em->persist($article);
+     $em->flush();
+4) Для чтения:
+   - внедрить ArticleRepository и вызвать методы поиска (find, findAll и т.п.).
+5) Для обновления:
+   - изменить свойства объекта и снова вызвать $em->flush();
+6) Для удаления:
+   - $em->remove($article);
+   - $em->flush();
+
+В более “чистом” подходе вся эта логика уезжает в отдельные сервисы, а контроллер только вызывает их методы.
+
+---
+
+### 9.6. Полезные команды Doctrine
+
+Проверка подключения к БД:
+php bin/console doctrine:database:create
+php bin/console doctrine:database:drop --force
+
+Синхронизация схемы (если очень нужно, но обычно используют миграции):
+php bin/console doctrine:schema:update --force
+
+Создание миграции:
+php bin/console make:migration
+
+Применение миграций:
+php bin/console doctrine:migrations:migrate
+
+---
+
+Минимальная идея этого раздела:
+- .env хранит строку подключения к БД,
+- сущности в src/Entity описывают таблицы,
+- миграции меняют структуру БД,
+- репозитории и EntityManager позволяют удобно читать и изменять данные.
+
