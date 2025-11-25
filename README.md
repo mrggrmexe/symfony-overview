@@ -188,3 +188,96 @@ symfony check:requirements
 
 Она покажет, всё ли ок для запуска Symfony-проекта и каких расширений/настроек не хватает.
 
+## 5. Быстрый старт на macOS
+
+В этом разделе — минимальный набор шагов, чтобы запустить первый проект на Symfony на macOS.
+
+### 5.1. Установить Homebrew
+
+Homebrew — это пакетный менеджер для macOS, через него будем ставить всё остальное.
+
+Официальная команда установки (выполнить в терминале):
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+Проверка, что всё ок:
+brew --version
+
+---
+
+### 5.2. Установить PHP
+
+Через Homebrew ставим актуальную версию PHP:
+
+brew install php
+
+Проверяем версию:
+php -v
+
+(Если нужно явно, например php@8.3:
+brew install php@8.3)
+
+---
+
+### 5.3. Установить Composer
+
+Composer — менеджер зависимостей для PHP, без него Symfony-проект не живёт.
+
+Установка через Homebrew:
+brew install composer
+
+Проверка:
+composer -V
+
+---
+
+### 5.4. Установить Symfony CLI
+
+Symfony CLI упростит создание и запуск проектов.
+
+Установка:
+brew install symfony-cli/tap/symfony-cli
+
+Проверка:
+symfony version
+
+---
+
+### 5.5. Создать новый проект Symfony
+
+Переходим в папку, где хочешь держать проект, и создаём новый:
+
+symfony new my_project --webapp
+
+Либо через Composer (альтернатива):
+composer create-project symfony/website-skeleton my_project
+
+После создания:
+cd my_project
+
+---
+
+### 5.6. Запуск локального сервера
+
+Проще всего запустить встроенный сервер Symfony:
+
+symfony serve
+
+По умолчанию проект будет доступен по адресу:
+http://127.0.0.1:8000
+или
+http://localhost:8000
+
+Открой этот адрес в браузере — увидишь стартовую страницу Symfony.
+
+---
+
+### 5.7. Быстрая проверка, что всё ок
+
+Внутри проекта выполни:
+
+symfony check:requirements
+
+Если все требования выполнены — окружение готово, можно переходить к изучению структуры проекта и написанию кода.
+
+
