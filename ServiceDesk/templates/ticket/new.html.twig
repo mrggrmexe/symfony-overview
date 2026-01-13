@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Новая заявка • ServiceDesk{% endblock %}
+
+{% block body %}
+  <div class="card" style="max-width:820px;margin:0 auto">
+    <div class="top">
+      <h1 class="h" style="margin:0">Создать заявку</h1>
+      <a class="btn" href="/tickets">← Назад</a>
+    </div>
+
+    {% if form is not defined %}
+      <div class="card" style="margin-top:12px">
+        <div class="tag warn">WARNING</div>
+        <div style="margin-top:8px">
+          Контроллер ещё не передал переменную <code>form</code>.
+          Ожидается: <code>$this->createForm(TicketType::class, $ticket)</code>.
+        </div>
+      </div>
+    {% else %}
+      {{ form_start(form) }}
+
+        <div class="formRow">
+          {{ form_label(form.title) }}
+          {{ form_widget(form.title) }}
+          <div class="error">{{ form_errors(form.title) }}</div>
+        </div>
+
+        <div class="formRow">
+          {{ form_label(form.description) }}
+          {{ form_widget(form.description) }}
+          <div class="error">{{ form_errors(form.description) }}</div>
+        </div>
+
+        <div class="grid2">
+          <div class="formRow">
+            {{ form_label(form.priority) }}
+            {{ form_widget(form.priority) }}
+            <div class="error">{{ form_errors(form.priority) }}</div>
+          </div>
+          <div class="formRow">
+            {{ form_label(form.category) }}
+            {{ form_widget(form.category) }}
+            <div class="error">{{ form_errors(form.category) }}</div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button class="btn btnPrimary" type="submit">Создать</button>
+          <a class="btn" href="/tickets">Отмена</a>
+        </div>
+
+      {{ form_end(form) }}
+    {% endif %}
+  </div>
+{% endblock %}

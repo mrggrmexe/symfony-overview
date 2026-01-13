@@ -1,0 +1,45 @@
+security:
+  password_hashers:
+    App\Entity\User: 'auto'
+
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+
+  role_hierarchy:
+    ROLE_SUPPORT: ROLE_USER
+    ROLE_ADMIN: [ROLE_SUPPORT, ROLE_USER]
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    main:
+      lazy: true
+      provider: app_user_provider
+
+      form_login:
+        login_path: /login
+        check_path: /login
+        username_parameter: email
+        password_parameter: password
+        
+      logout:
+        path: /logout
+        target: /
+
+  access_control:
+    # ВАЖНО: public-роуты должны быть ПЕРВЫМИ, иначе будет redirect loop
+    - { path: ^/login$, roles: PUBLIC_ACCESS }
+    - { path: ^/register$, roles: PUBLIC_ACCESS }
+
+    # Если EasyAdmin:
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/support, roles: ROLE_SUPPORT }
+
+    # Остальное — только для залогиненных
+    - { path: ^/tickets, roles: ROLE_USER }
+    - { path: ^/, roles: PUBLIC_ACCESS }   # главную оставим публичной (можно ROLE_USER)

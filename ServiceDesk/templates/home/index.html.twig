@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ServiceDesk • Главная{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <h1 class="h">ServiceDesk</h1>
+    <p class="muted">
+      Проект создан и работает. Дальше можно: зарегистрироваться, создать заявку, добавить комментарии, зайти в поддержку.
+    </p>
+
+    <div class="row" style="margin-top:12px">
+      <a class="btn btnPrimary" href="/register">Регистрация</a>
+      <a class="btn" href="/login">Вход</a>
+      <a class="btn" href="/tickets">Мои заявки</a>
+      <a class="btn" href="/support/tickets">Поддержка</a>
+      <a class="btn" href="/admin">Admin</a>
+    </div>
+  </div>
+{% endblock %}

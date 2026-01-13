@@ -1,0 +1,12 @@
+{# Ожидает переменную ticket #}
+{% set st = ticket.status|default('NEW') %}
+{% set pr = ticket.priority|default('MEDIUM') %}
+
+{% set stCls = st in ['RESOLVED','CLOSED'] ? 'ok' : (st == 'IN_PROGRESS' ? 'info' : 'warn') %}
+{% set prCls = pr == 'HIGH' ? 'bad' : (pr == 'LOW' ? 'ok' : 'warn') %}
+
+<span class="tag {{ stCls }}">Status: {{ st }}</span>
+<span class="tag {{ prCls }}">Priority: {{ pr }}</span>
+{% if ticket.category is defined and ticket.category %}
+  <span class="tag">Category: {{ ticket.category.name|default('—') }}</span>
+{% endif %}

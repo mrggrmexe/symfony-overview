@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Поддержка • ServiceDesk{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="top">
+      <h1 class="h" style="margin:0">Поддержка: заявки</h1>
+      <div class="muted">Фильтры/поиск можно подключить через TicketRepository::search()</div>
+    </div>
+
+    {% set items = tickets|default([]) %}
+
+    {% if items is empty %}
+      <p class="muted" style="margin-top:12px">
+        Нет заявок (или контроллер пока отдаёт заглушку).
+      </p>
+    {% else %}
+      <table class="table" style="margin-top:12px">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Заголовок</th>
+            <th>Автор</th>
+            <th>Статус / Приоритет</th>
+            <th>Назначено</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in items %}
+            <tr>
+              <td>#{{ t.id|default('—') }}</td>
+              <td><a href="/support/tickets/{{ t.id|default('') }}">{{ t.title|default('Без названия') }}</a></td>
+              <td>{{ t.author.email|default('—') }}</td>
+              <td>{% include '_partials/_ticket_badges.html.twig' with { ticket: t } %}</td>
+              <td>{{ t.assignedTo.email|default('—') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}

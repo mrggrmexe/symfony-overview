@@ -1,0 +1,19 @@
+<div class="top" style="margin-bottom:14px">
+  <div>
+    <a class="brand" href="/">ServiceDesk</a>
+    <span class="muted">— demo</span>
+  </div>
+
+  <div class="right">
+    <a class="btn" href="/tickets">Мои заявки</a>
+    <a class="btn" href="/support/tickets">Поддержка</a>
+    <a class="btn" href="/admin">Admin</a>
+
+    {% if app.user %}
+      <span class="tag info">👤 {{ app.user.email|default('user') }}</span>
+      <a class="btn btnDanger" href="/logout">Logout</a>
+    {% else %}
+      <a class="btn btnPrimary" href="/login">Login</a>
+    {% endif %}
+  </div>
+</div>

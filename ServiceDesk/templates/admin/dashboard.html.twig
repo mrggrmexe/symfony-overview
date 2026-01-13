@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin • ServiceDesk{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <h1 class="h">Admin</h1>
+    <p class="muted">
+      Если EasyAdmin включён — обычно /admin показывает интерфейс EasyAdmin.
+      Этот шаблон можно использовать как fallback или страницу-описание.
+    </p>
+
+    <div class="row" style="margin-top:12px">
+      <a class="btn" href="/healthz">Healthz</a>
+      <a class="btn" href="/">Home</a>
+    </div>
+  </div>
+{% endblock %}

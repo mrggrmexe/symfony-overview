@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Регистрация • ServiceDesk{% endblock %}
+
+{% block body %}
+  <div class="card" style="max-width:560px;margin:0 auto">
+    <div class="top">
+      <h1 class="h" style="margin:0">Регистрация</h1>
+      <a class="btn" href="/login">Уже есть аккаунт?</a>
+    </div>
+
+    {% if registrationForm is not defined %}
+      <div class="card" style="margin-top:12px">
+        <div class="tag bad">ERROR</div>
+        <div style="margin-top:8px">Контроллер не передал <code>registrationForm</code>.</div>
+      </div>
+    {% else %}
+      <div style="margin-top:12px">
+        {{ form_start(registrationForm) }}
+
+          <div class="formRow">
+            {{ form_label(registrationForm.email) }}
+            {{ form_widget(registrationForm.email) }}
+            <div class="error">{{ form_errors(registrationForm.email) }}</div>
+          </div>
+
+          <div class="formRow">
+            {{ form_label(registrationForm.plainPassword.first) }}
+            {{ form_widget(registrationForm.plainPassword.first) }}
+            <div class="error">{{ form_errors(registrationForm.plainPassword.first) }}</div>
+          </div>
+
+          <div class="formRow">
+            {{ form_label(registrationForm.plainPassword.second) }}
+            {{ form_widget(registrationForm.plainPassword.second) }}
+            <div class="error">{{ form_errors(registrationForm.plainPassword.second) }}</div>
+          </div>
+
+          <div class="formRow">
+            <label style="display:flex;gap:10px;align-items:center">
+              {{ form_widget(registrationForm.agreeTerms, {'attr': {'style': 'width:auto'}}) }}
+              <span class="muted">{{ form_label(registrationForm.agreeTerms) }}</span>
+            </label>
+            <div class="error">{{ form_errors(registrationForm.agreeTerms) }}</div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <button class="btn btnPrimary" type="submit">Создать аккаунт</button>
+            <a class="btn" href="/">На главную</a>
+          </div>
+
+        {{ form_end(registrationForm) }}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

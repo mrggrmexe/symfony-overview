@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login • ServiceDesk{% endblock %}
+
+{% block body %}
+  <div class="card" style="max-width:520px;margin:0 auto">
+    <h1 class="h">Вход</h1>
+
+    {% if error %}
+      <div class="card" style="border-color:rgba(231,76,60,.35);background:rgba(231,76,60,.10);margin-bottom:12px">
+        <div class="tag bad">ERROR</div>
+        <div style="margin-top:8px">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+      </div>
+    {% endif %}
+
+    <form method="post" action="/login">
+      <div class="formRow">
+        <label for="inputEmail">Email</label>
+        <input type="email" name="email" id="inputEmail" autocomplete="email"
+               required value="{{ last_username|default('') }}">
+      </div>
+
+      <div class="formRow">
+        <label for="inputPassword">Пароль</label>
+        <input type="password" name="password" id="inputPassword" autocomplete="current-password" required>
+      </div>
+
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+      <div class="row" style="margin-top:10px">
+        <button class="btn btnPrimary" type="submit">Войти</button>
+        <a class="btn" href="/">На главную</a>
+      </div>
+
+      <div class="help" style="margin-top:10px">
+        Для демо можешь использовать учётки из fixtures (если добавишь).
+      </div>
+    </form>
+  </div>
+{% endblock %}

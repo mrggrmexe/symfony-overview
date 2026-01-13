@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Мои заявки • ServiceDesk{% endblock %}
+
+{% block body %}
+  <div class="card">
+    <div class="top">
+      <h1 class="h" style="margin:0">Мои заявки</h1>
+      <div class="right">
+        <a class="btn btnPrimary" href="/tickets/new">+ Создать заявку</a>
+      </div>
+    </div>
+
+    {% set items = tickets|default([]) %}
+
+    {% if items is empty %}
+      <p class="muted" style="margin-top:12px">
+        Пока нет заявок. Нажми “Создать заявку”.
+      </p>
+    {% else %}
+      <table class="table" style="margin-top:12px">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Заголовок</th>
+            <th>Статус / Приоритет</th>
+            <th>Категория</th>
+            <th>Обновлено</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in items %}
+            <tr>
+              <td>#{{ t.id|default('—') }}</td>
+              <td>
+                <a href="/tickets/{{ t.id|default('') }}">
+                  {{ t.title|default('Без названия') }}
+                </a>
+              </td>
+              <td>{% include '_partials/_ticket_badges.html.twig' with { ticket: t } %}</td>
+              <td>{{ t.category.name|default('—') }}</td>
+              <td>{{ t.updatedAt ? t.updatedAt|date('Y-m-d H:i') : (t.createdAt ? t.createdAt|date('Y-m-d H:i') : '—') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}

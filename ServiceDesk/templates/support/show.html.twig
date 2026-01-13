@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Поддержка • Заявка{% endblock %}
+
+{% block body %}
+  {% set t = ticket|default(null) %}
+
+  <div class="card">
+    <div class="top">
+      <div>
+        <h1 class="h" style="margin:0">Support: заявка #{{ t ? t.id : '—' }}</h1>
+        <div class="muted">{{ t ? (t.title|default('Без названия')) : 'Ticket not provided' }}</div>
+      </div>
+      <a class="btn" href="/support/tickets">← К списку</a>
+    </div>
+
+    {% if not t %}
+      <div class="card" style="margin-top:12px">
+        <div class="tag bad">ERROR</div>
+        <div style="margin-top:8px">Контроллер не передал переменную <code>ticket</code>.</div>
+      </div>
+    {% else %}
+      <div style="margin-top:12px">
+        {% include '_partials/_ticket_badges.html.twig' with { ticket: t } %}
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="grid2">
+        <div>
+          <div class="tag">Описание</div>
+          <div style="margin-top:10px;white-space:pre-wrap">{{ t.description|default('') }}</div>
+        </div>
+
+        <div>
+          <div class="tag info">Управление (Support)</div>
+
+          {% if statusForm is not defined %}
+            <p class="muted" style="margin-top:10px">
+              Контроллер ещё не передал <code>statusForm</code> (TicketStatusType).
+            </p>
+          {% else %}
+            <div style="margin-top:10px">
+              {{ form_start(statusForm) }}
+
+                <div class="formRow">
+                  {{ form_label(statusForm.status) }}
+                  {{ form_widget(statusForm.status) }}
+                  <div class="error">{{ form_errors(statusForm.status) }}</div>
+                </div>
+
+                <div class="formRow">
+                  {{ form_label(statusForm.priority) }}
+                  {{ form_widget(statusForm.priority) }}
+                  <div class="error">{{ form_errors(statusForm.priority) }}</div>
+                </div>
+
+                <div class="formRow">
+                  {{ form_label(statusForm.assignedTo) }}
+                  {{ form_widget(statusForm.assignedTo) }}
+                  <div class="error">{{ form_errors(statusForm.assignedTo) }}</div>
+                </div>
+
+                <button class="btn btnPrimary" type="submit">Сохранить</button>
+
+              {{ form_end(statusForm) }}
+            </div>
+          {% endif %}
+
+          <div class="hr"></div>
+          <div class="muted" style="font-size:13px">
+            Автор: {{ t.author.email|default('—') }}<br>
+            Создано: {{ t.createdAt ? t.createdAt|date('Y-m-d H:i') : '—' }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

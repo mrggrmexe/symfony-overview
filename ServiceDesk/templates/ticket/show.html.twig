@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заявка • ServiceDesk{% endblock %}
+
+{% block body %}
+  {% set t = ticket|default(null) %}
+
+  <div class="card">
+    <div class="top">
+      <div>
+        <h1 class="h" style="margin:0">Заявка #{{ t ? t.id : '—' }}</h1>
+        <div class="muted">{{ t ? (t.title|default('Без названия')) : 'Ticket not provided' }}</div>
+      </div>
+      <div class="right">
+        <a class="btn" href="/tickets">← К списку</a>
+      </div>
+    </div>
+
+    {% if not t %}
+      <div class="card" style="margin-top:12px">
+        <div class="tag bad">ERROR</div>
+        <div style="margin-top:8px">Контроллер не передал переменную <code>ticket</code>.</div>
+      </div>
+    {% else %}
+      <div style="margin-top:12px">
+        {% include '_partials/_ticket_badges.html.twig' with { ticket: t } %}
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="grid2">
+        <div>
+          <div class="tag">Описание</div>
+          <div style="margin-top:10px;white-space:pre-wrap">{{ t.description|default('') }}</div>
+        </div>
+        <div>
+          <div class="tag">Метаданные</div>
+          <div style="margin-top:10px" class="muted">
+            <div><b>Автор:</b> {{ t.author.email|default('—') }}</div>
+            <div><b>Назначено:</b> {{ t.assignedTo.email|default('—') }}</div>
+            <div><b>Создано:</b> {{ t.createdAt ? t.createdAt|date('Y-m-d H:i') : '—' }}</div>
+            <div><b>Обновлено:</b> {{ t.updatedAt ? t.updatedAt|date('Y-m-d H:i') : '—' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="tag info">Комментарии</div>
+
+      {% set comments = t.comments|default([]) %}
+      {% if comments is empty %}
+        <p class="muted" style="margin-top:10px">Комментариев нет.</p>
+      {% else %}
+        <div style="margin-top:10px;display:grid;gap:10px">
+          {% for c in comments %}
+            <div class="card" style="background:rgba(0,0,0,.12)">
+              <div class="muted" style="font-size:13px">
+                {{ c.author.email|default('—') }} •
+                {{ c.createdAt ? c.createdAt|date('Y-m-d H:i') : '—' }}
+              </div>
+              <div style="margin-top:8px;white-space:pre-wrap">{{ c.message|default('') }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="hr"></div>
+
+      <div class="tag">Добавить комментарий</div>
+
+      {% if commentForm is not defined %}
+        <p class="muted" style="margin-top:10px">
+          Контроллер ещё не передал <code>commentForm</code> (CommentType).
+        </p>
+      {% else %}
+        <div style="margin-top:10px">
+          {{ form_start(commentForm) }}
+            <div class="formRow">
+              {{ form_widget(commentForm.message) }}
+              <div class="error">{{ form_errors(commentForm.message) }}</div>
+            </div>
+            <button class="btn btnPrimary" type="submit">Отправить</button>
+          {{ form_end(commentForm) }}
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}

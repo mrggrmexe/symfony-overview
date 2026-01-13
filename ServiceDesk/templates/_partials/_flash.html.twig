@@ -1,0 +1,10 @@
+{% set types = ['success','info','warning','danger'] %}
+{% for t in types %}
+  {% for msg in app.flashes(t) %}
+    {% set cls = (t == 'success') ? 'ok' : (t == 'warning' ? 'warn' : (t == 'danger' ? 'bad' : 'info')) %}
+    <div class="card" style="margin-bottom:10px">
+      <span class="tag {{ cls }}">{{ t|upper }}</span>
+      <div style="margin-top:8px">{{ msg }}</div>
+    </div>
+  {% endfor %}
+{% endfor %}
